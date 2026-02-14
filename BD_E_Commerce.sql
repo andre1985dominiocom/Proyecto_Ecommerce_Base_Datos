@@ -96,31 +96,34 @@ create table Inventarios (
 create table Carrito_Compras (
     ID_Carrito int auto_increment primary key,
     Fecha_creacion timestamp not null default (current_timestamp()),
+    Fecha_actualizacion timestamp default (current_timestamp()) on update current_timestamp,
     Usuario_ID int not null,
-    foreign key (Usuario_ID) references Usuarios(ID_Usuario)
+    ID_Detalle int not null,
+    foreign key (Usuario_ID) references Usuarios(ID_Usuario),
+    foreign key (ID_Detalle) references Detalles_Pedidos(ID_Detalle)
         on delete cascade
         on update cascade
 );
 
-create table Item_Carrito (
-    ID_Item int auto_increment primary key,
-    Cantidad int not null,
-    Subtotal decimal(10,2) not null,
-    Carrito_ID int not null,
-    Producto_ID int not null,
-    foreign key (Carrito_ID) references Carrito_Compras(ID_Carrito)
-        on delete cascade
-        on update cascade,
-    foreign key (Producto_ID) references Productos(ID_Producto)
-        on delete cascade
-        on update cascade
-);
+-- create table Item_Carrito (
+    -- ID_Item int auto_increment primary key,
+    -- Cantidad int not null,
+    -- Subtotal decimal(10,2) not null,
+    -- Carrito_ID int not null,
+    -- Producto_ID int not null,
+    -- foreign key (Carrito_ID) references Carrito_Compras(ID_Carrito)
+        -- on delete cascade
+        -- on update cascade,
+    -- foreign key (Producto_ID) references Productos(ID_Producto)
+        -- on delete cascade
+        -- on update cascade
+-- );
 
 create table Pedidos (
     ID_Pedido int auto_increment primary key,
     Fecha_pedido date not null default (current_date()),
     Estado_pedido enum('Entregado', 'En Proceso', 'Pendiente') default 'Pendiente',
-    Monto_total decimal(10,2) not null,
+    Monto_Total decimal(10,2),
     Usuario_ID int not null,
     Fecha_creacion timestamp default (current_timestamp()),
     Fecha_actualizacion timestamp default (current_timestamp()) on update current_timestamp,
@@ -144,6 +147,10 @@ create table Detalles_Pedidos (
         on update cascade
 );
 
+alter table Detalles_Pedidos
+add constraint ID_Carrito
+foreign key (ID_Carrito) references Carrito_Compras(ID_Carrito);
+
 -- ======================================
 -- TABLAS DE ENVIOS Y PAGOS
 -- ======================================
@@ -165,31 +172,37 @@ create table Envios (
 
 create table Pagos (
     ID_Pago int auto_increment primary key,
-    Monto decimal(10,2) not null,
-    Metodo_pago enum('Tarjeta_Credito', 'Transferencia', 'Efectivo'),
     Estado_pago enum('En Proceso', 'Pendiente', 'Finalizado') default 'Pendiente',
     Referencia_transaccion varchar(50) not null unique,
     Referencia_pasarela varchar(100),
     Pedido_ID int not null,
     Fecha_creacion timestamp default (current_timestamp()),
-    Fecha_actualizacion timestamp default (current_timestamp()) on update current_timestamp,
     foreign key (Pedido_ID) references Pedidos(ID_Pedido)
         on delete restrict
         on update cascade
 );
 
-create table Facturas (
-    ID_Factura int auto_increment primary key,
-    Pago_ID int not null,
-    Total_factura decimal(10,2) not null,
-    Usuario_ID int not null,
-    foreign key (Pago_ID) references Pagos(ID_Pago)
-        on delete restrict
-        on update cascade,
-    foreign key (Usuario_ID) references Usuarios(ID_Usuario)
-        on delete restrict
+create table Metodos_Pagos (
+	ID_Metodo int auto_increment primary key,
+	Metodo_pago enum('Tarjeta_Credito', 'Transferencia', 'Efectivo'),
+    ID_Pago int not null,
+    foreign key (ID_Pago) references Pagos(ID_Pago)
+		on delete restrict
         on update cascade
 );
+
+-- create table Facturas (
+    -- ID_Factura int auto_increment primary key,
+    -- Pago_ID int not null,
+    -- Total_factura decimal(10,2) not null,
+    -- Usuario_ID int not null,
+    -- foreign key (Pago_ID) references Pagos(ID_Pago)
+        -- on delete restrict
+        -- on update cascade,
+    -- foreign key (Usuario_ID) references Usuarios(ID_Usuario)
+        -- on delete restrict
+        -- on update cascade
+-- );
 
 -- ======================================
 -- TABLAS DE PROMOCIONES
@@ -209,4 +222,3 @@ create table Promociones (
         on delete cascade
         on update cascade
 );
-
