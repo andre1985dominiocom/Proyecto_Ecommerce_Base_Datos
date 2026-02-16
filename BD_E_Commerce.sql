@@ -45,6 +45,9 @@ create table Usuarios (
         on update cascade
 );
 
+alter table Usuarios
+drop column Direccion;
+
 create table Telefonos (
     ID_Telefono int auto_increment primary key,
     Numero varchar(50) not null,
@@ -53,6 +56,42 @@ create table Telefonos (
         on delete cascade
         on update cascade
 );
+
+create table Emails (
+	ID_Email int auto_increment primary key,
+	Email varchar(100) unique not null,
+    Usuario_ID int not null,
+    foreign key (Usuario_ID) references Usuarios(ID_Usuario)
+		on delete cascade
+		on update cascade
+);
+
+create table Direcciones (
+	ID_Direccion int auto_increment primary key,
+	Direccion varchar(100) not null,
+	Usuario_ID int not null,
+	foreign key (Usuario_ID) references Usuarios(ID_Usuario)
+		on delete cascade 
+		on update cascade
+);
+
+alter table Direcciones
+drop column Ciudad;
+
+create table Ciudades (
+	ID_Ciudad int auto_increment primary key,
+	Direccion_ID int not null,
+	foreign key (Direccion_ID) references Direcciones(ID_Direccion)
+		on delete cascade
+		on update cascade
+);
+
+alter table Ciudades
+add Ciudad varchar(100) not null;
+
+alter table Direcciones
+add constraint Ciudad_ID
+foreign key (Ciudad_ID) references Ciudades(ID_Ciudad);
 
 -- ======================================
 -- TABLAS DE PRODUCTOS E INVENTARIO
@@ -148,8 +187,13 @@ create table Detalles_Pedidos (
 );
 
 alter table Detalles_Pedidos
+drop column Subtotal;
+
+alter table Detalles_Pedidos
 add constraint ID_Carrito
 foreign key (ID_Carrito) references Carrito_Compras(ID_Carrito);
+
+alter table Detalles_Pedidos drop foreign key ID_Carrito;
 
 -- ======================================
 -- TABLAS DE ENVIOS Y PAGOS
@@ -170,6 +214,16 @@ create table Envios (
         on update cascade
 );
 
+alter table Envios
+drop column Ciudad;
+
+alter table Envios
+add Direccion_ID int not null;
+
+alter table Envios
+add constraint Direccion_ID
+foreign key (Direccion_ID) references Direcciones(ID_Direccion);
+
 create table Pagos (
     ID_Pago int auto_increment primary key,
     Estado_pago enum('En Proceso', 'Pendiente', 'Finalizado') default 'Pendiente',
@@ -182,14 +236,24 @@ create table Pagos (
         on update cascade
 );
 
+alter table Pagos
+drop column Moneda;
+
+alter table Pagos
+add constraint Metodo_ID
+foreign key (Metodo_ID) references Metodos_Pagos(ID_Metodo);
+
 create table Metodos_Pagos (
 	ID_Metodo int auto_increment primary key,
 	Metodo_pago enum('Tarjeta_Credito', 'Transferencia', 'Efectivo'),
-    ID_Pago int not null,
-    foreign key (ID_Pago) references Pagos(ID_Pago)
+    Pago_ID int not null,
+    foreign key (Pago_ID) references Pagos(ID_Pago)
 		on delete restrict
         on update cascade
 );
+
+alter table Metodos_Pagos 
+drop column Pago_ID;
 
 -- create table Facturas (
     -- ID_Factura int auto_increment primary key,
