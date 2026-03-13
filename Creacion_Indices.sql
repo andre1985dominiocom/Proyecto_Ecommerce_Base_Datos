@@ -1,0 +1,9 @@
+create index idx_usuarios_email on Usuarios(Email);
+create index idx_productos_nombre on Productos(Nombre_producto);
+create index idx_productos_categoria on Productos(Categoria_ID);
+create index idx_pedidos_usuario on Pedidos(Usuario_ID);
+create index idx_pedidos_estado on Pedidos(Estado_pedido);
+create index idx_pedidos_fecha on Pedidos(Fecha_pedido);
+create index idx_items_carrito on Item_Carrito(ID_Item);
+create index idx_resenas_producto on Resenas(Producto_ID);
+create index idx_inventarios_producto on Inventarios(Producto_ID);
