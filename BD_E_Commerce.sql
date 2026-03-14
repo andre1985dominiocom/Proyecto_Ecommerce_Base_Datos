@@ -136,6 +136,10 @@ create table Sesiones (
 -- TABLAS DE PRODUCTOS E INVENTARIO
 -- ======================================
 
+-- Es una relación recursiva o auto-referencia que permite crear jerarquías de categorías. 
+-- Por ejemplo, puedo tener 'Pijamas' como categoría raíz, y dentro de ella 'Pijamas de Mujer', 'Pijamas de Hombre', etc. 
+-- Esto se logra con una FK que apunta a la misma tabla, donde Categoria_padre_ID = NULL indica categorías raíz, 
+-- y valores numéricos indican subcategorías.
 create table Categorias (
 	ID_Categoria int auto_increment primary key,
     Nombre_categoria varchar(100) not null unique,
@@ -222,7 +226,7 @@ create table Pedidos (
     Numero_pedido varchar(20) unique,
 	Usuario_ID int not null,
     Direccion_envio_ID int not null,
-    Estado_pedido enum('Pendiente Pago', 'Pagado', 'En Preparación', 'Despachado', 'En Transito', 'Entregado', 'Cancelado', 'Devuelto') default 'Pendiente Pago',
+    Estado_pedido enum('Pendiente_Pago', 'Pagado', 'En_Preparacion', 'Despachado', 'En_Transito', 'Entregado', 'Cancelado', 'Devuelto') default 'Pendiente_Pago', -- La tabla Pedidos guarda el estado actual del pedido.
     Subtotal decimal(10,2) not null,
     Descuento decimal(10,2) default 0.00,
     IVA decimal(10,2) not null,
@@ -238,10 +242,24 @@ create table Pedidos (
     foreign key (Cupon_ID) references Cupones(ID_Cupon)
 );
 
+create table Detalles_Pedidos (
+    ID_Detalle int auto_increment primary key,
+    Pedido_ID int not null,
+    Producto_ID int not null,
+    Cantidad int not null,
+    Precio_unitario decimal(10,2) not null,
+    Subtotal decimal(10,2) not null,
+    foreign key (Pedido_ID) references Pedidos(ID_Pedido)
+        on delete cascade,
+    foreign key (Producto_ID) references Productos(ID_Producto)
+        on delete restrict
+) engine=InnoDB default charset=utf8mb4;
+
+-- La tabla Historial_Estados_Pedido guarda el historial de cambios.
 create table Historial_Estados_Pedido (
     ID_Historial int auto_increment primary key,
     Pedido_ID int not null,
-    Estado_anterior enum('Recibido', 'Pagado', 'En_Preparacion', 'Despachado', 'En_Transito', 'Entregado', 'Cancelado', 'Devuelto'),
+    Estado_anterior enum('Pendiente_Pago', 'Pagado', 'En_Preparacion', 'Despachado', 'En_Transito', 'Entregado', 'Cancelado', 'Devuelto'),  -- 
     Estado_nuevo enum('Recibido', 'Pagado', 'En_Preparacion', 'Despachado', 'En_Transito', 'Entregado', 'Cancelado', 'Devuelto'),
     Usuario_ID int,  -- Quién cambió el estado
     Fecha_cambio timestamp default current_timestamp(),
