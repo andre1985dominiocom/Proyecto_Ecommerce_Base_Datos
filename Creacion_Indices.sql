@@ -7,3 +7,5 @@ create index idx_pedidos_fecha on Pedidos(Fecha_pedido);
 create index idx_items_carrito on Item_Carrito(ID_Item);
 create index idx_resenas_producto on Resenas(Producto_ID);
 create index idx_inventarios_producto on Inventarios(Producto_ID);
+create index idx_detalles_pedido on Detalles_Pedidos(Pedido_ID);
+create index idx_detalles_producto on Detalles_Pedidos(Producto_ID);
