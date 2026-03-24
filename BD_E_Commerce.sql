@@ -137,7 +137,8 @@ create table Sesiones (
 -- ======================================
 
 -- Es una relación recursiva o auto-referencia que permite crear jerarquías de categorías. 
--- Por ejemplo, puedo tener 'Pijamas' como categoría raíz, y dentro de ella 'Pijamas de Mujer', 'Pijamas de Hombre', etc. 
+-- Por ejemplo, puedo tener 'Pijamas de mujer' como categoría raíz y dentro de ella 'Pijamas Short', 'Accesorios' y 'Aretes', 
+-- Complementos y 'Bolsos' etc. 
 -- Esto se logra con una FK que apunta a la misma tabla, donde Categoria_padre_ID = NULL indica categorías raíz, 
 -- y valores numéricos indican subcategorías.
 create table Categorias (
