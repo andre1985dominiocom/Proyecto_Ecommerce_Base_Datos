@@ -30,3 +30,8 @@ enum('Pendiente_Pago', 'Pagado', 'En_Preparacion', 'Despachado', 'En_Transito', 
 alter table Historial_Estados_pedido 
 modify column Estado_anterior
 enum('Pendiente_Pago', 'Pagado', 'En_Preparacion', 'Despachado', 'En_Transito', 'Entregado', 'Cancelado', 'Devuelto');
+
+-- Modificar campo Estado_nuevo
+alter table Historial_Estados_Pedido
+modify column Estado_nuevo 
+enum('Pendiente_Pago', 'Pagado', 'En_Preparacion', 'Despachado', 'En_Transito', 'Entregado', 'Cancelado', 'Devuelto');

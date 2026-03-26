@@ -213,7 +213,8 @@ create table Item_Carrito (
     Producto_ID int not null,
     Cantidad int not null,
     Precio_unitario decimal(10,2) not null,
-    Subtotal decimal(10,2) generated always as (Cantidad * Precio_unitario) stored,
+    Subtotal decimal(10,2) generated always as (Cantidad * Precio_unitario) stored, --  GENERATED STORED que MySQL calcula automáticamente. 
+																					-- Optimiza la visualización del carrito.
     Fecha_agregado timestamp default (current_timestamp()),
     unique key (Carrito_ID, Producto_ID),  -- No duplicar
     foreign key (Carrito_ID) references Carrito_Compras(ID_Carrito)
@@ -228,7 +229,8 @@ create table Pedidos (
 	Usuario_ID int not null,
     Direccion_envio_ID int not null,
     Estado_pedido enum('Pendiente_Pago', 'Pagado', 'En_Preparacion', 'Despachado', 'En_Transito', 'Entregado', 'Cancelado', 'Devuelto') default 'Pendiente_Pago', -- La tabla Pedidos guarda el estado actual del pedido.
-    Subtotal decimal(10,2) not null,
+    Subtotal decimal(10,2) not null, -- Guardo el Subtotal total del pedido para reportes rápidos. 
+									 -- Calcular desde Detalles_Pedidos cada vez sería ineficiente en reportes con miles de pedidos.
     Descuento decimal(10,2) default 0.00,
     IVA decimal(10,2) not null,
     Costo_envio decimal(10,2) default 0.00,
@@ -249,7 +251,8 @@ create table Detalles_Pedidos (
     Producto_ID int not null,
     Cantidad int not null,
     Precio_unitario decimal(10,2) not null,
-    Subtotal decimal(10,2) not null,
+    Subtotal decimal(10,2) not null, -- Guardo Precio_unitario y Subtotal como snapshot del momento de la compra. 
+									 -- Esto garantiza que pueda regenerar facturas exactas meses después, incluso si los precios cambian.
     foreign key (Pedido_ID) references Pedidos(ID_Pedido)
         on delete cascade,
     foreign key (Producto_ID) references Productos(ID_Producto)
@@ -260,8 +263,8 @@ create table Detalles_Pedidos (
 create table Historial_Estados_Pedido (
     ID_Historial int auto_increment primary key,
     Pedido_ID int not null,
-    Estado_anterior enum('Pendiente_Pago', 'Pagado', 'En_Preparacion', 'Despachado', 'En_Transito', 'Entregado', 'Cancelado', 'Devuelto'),  -- 
-    Estado_nuevo enum('Recibido', 'Pagado', 'En_Preparacion', 'Despachado', 'En_Transito', 'Entregado', 'Cancelado', 'Devuelto'),
+    Estado_anterior enum('Pendiente_Pago', 'Pagado', 'En_Preparacion', 'Despachado', 'En_Transito', 'Entregado', 'Cancelado', 'Devuelto'),  -- Lo que era antes
+    Estado_nuevo enum('Pendiente_Pago', 'Pagado', 'En_Preparacion', 'Despachado', 'En_Transito', 'Entregado', 'Cancelado', 'Devuelto'), -- Lo que es ahora
     Usuario_ID int,  -- Quién cambió el estado
     Fecha_cambio timestamp default current_timestamp(),
     Notas varchar(500),
@@ -312,7 +315,9 @@ create table Pagos (
 -- ======================================
 -- TABLAS DE PROMOCIONES
 -- ======================================
-
+-- Son descuentos automáticos que el sistema aplica sin intervención del cliente. 
+-- Por ejemplo: 'Todos los pijamas de mujer tienen 20% de descuento esta semana'. 
+-- El cliente simplemente navega y ve el precio rebajado.
 create table Promociones (
     ID_Promocion int auto_increment primary key,
     Nombre_promocion varchar(100) not null,
@@ -332,6 +337,8 @@ create table Promociones (
 	foreign key (Categoria_ID) references Categorias(ID_Categoria)
 );
 
+-- Son descuentos que requieren un código que el cliente debe ingresar manualmente en el checkout. 
+-- Por ejemplo: 'Usa el código BIENVENIDO10 para obtener 10% de descuento en tu primera compra'.
 create table Cupones (
     ID_Cupon int auto_increment primary key,
     Codigo varchar(50) unique not null,
