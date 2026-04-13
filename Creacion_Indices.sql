@@ -9,3 +9,5 @@ create index idx_resenas_producto on Resenas(Producto_ID);
 create index idx_inventarios_producto on Inventarios(Producto_ID);
 create index idx_detalles_pedido on Detalles_Pedidos(Pedido_ID);
 create index idx_detalles_producto on Detalles_Pedidos(Producto_ID);
+create index idx_token_usuario on Tokens_Recuperacion(Usuario_ID);
+create unique index uidx_direccion_principal on Direcciones (Es_principal);
