@@ -35,3 +35,26 @@ enum('Pendiente_Pago', 'Pagado', 'En_Preparacion', 'Despachado', 'En_Transito', 
 alter table Historial_Estados_Pedido
 modify column Estado_nuevo 
 enum('Pendiente_Pago', 'Pagado', 'En_Preparacion', 'Despachado', 'En_Transito', 'Entregado', 'Cancelado', 'Devuelto');
+
+-- Modificar campo Usuario_ID 
+alter table carrito_compras
+modify column Usuario_ID
+int unique null;
+
+-- Modificar campo Sesion_ID
+alter table carrito_compras
+modify column Sesion_ID
+varchar(100) unique null;
+
+alter table carrito_compras 
+drop column Usuario_ID;
+
+alter table carrito_compras 
+drop check Carrito_Compras_chk_1;
+
+alter table carrito_compras
+drop index Usuario_ID_2;
+
+show create table carrito_compras;
+
+

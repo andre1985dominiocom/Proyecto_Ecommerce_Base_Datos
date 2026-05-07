@@ -41,3 +41,7 @@ SELECT
     padre.Nombre_categoria AS Es_Hija_De
 FROM categorias hijo
 LEFT JOIN categorias padre ON hijo.Categoria_padre_ID = padre.ID_Categoria;
+
+insert into envios (Pedido_ID, Direccion_ID, Transportadora, Numero_Guia, Estado, Observaciones)
+values ("Servientrega", "SEV012", "En Preparación", "Pedido en proceso de despacho");
+

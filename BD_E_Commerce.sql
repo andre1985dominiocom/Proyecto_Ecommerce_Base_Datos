@@ -200,8 +200,8 @@ create table Resenas (
 
 create table Carrito_Compras (
     ID_Carrito int auto_increment primary key,
-    Usuario_ID int unique, -- Permite usuarios logueados y anónimos
-    Sesion_ID varchar(100) unique, -- Permite usuarios logueados y anónimos
+    Usuario_ID int unique null, -- Permite usuarios logueados y anónimos
+    Sesion_ID varchar(100) unique null, -- Permite usuarios logueados y anónimos
     Fecha_creacion timestamp not null default (current_timestamp()), -- Auditoría básica
     Fecha_actualizacion timestamp default (current_timestamp()) on update current_timestamp, -- Auditoría básica
     Fecha_expiracion timestamp, -- Tiempo que pueden permanecer los productos en el carrito si realizar pedido
