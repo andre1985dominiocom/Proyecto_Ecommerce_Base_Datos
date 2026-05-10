@@ -39,12 +39,12 @@ enum('Pendiente_Pago', 'Pagado', 'En_Preparacion', 'Despachado', 'En_Transito', 
 -- Modificar campo Usuario_ID 
 alter table carrito_compras
 modify column Usuario_ID
-int unique null;
+int null;
 
 -- Modificar campo Sesion_ID
 alter table carrito_compras
 modify column Sesion_ID
-varchar(100) unique null;
+varchar(100) null;
 
 alter table carrito_compras 
 drop column Usuario_ID;
@@ -57,4 +57,8 @@ drop index Usuario_ID_2;
 
 show create table carrito_compras;
 
+show index from Carrito_Compras;
 
+show columns from Carrito_Compras;
+drop index Usuario_ID_2 on Carrito_Compras;
+drop index Sesion_ID_2 on Carrito_Compras;
