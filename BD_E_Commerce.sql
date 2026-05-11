@@ -361,7 +361,7 @@ create table Promociones (
 create table Cupones (
     ID_Cupon int auto_increment primary key,
     Codigo varchar(50) unique not null, -- Código ingresado por usuario
-    Tipo_descuento enum('Porcentaje', 'Monto_Fijo'), -- Porcentahe o valor fijo
+    Tipo_descuento enum('Porcentaje', 'Monto Fijo'), -- Porcentahe o valor fijo
     Valor_descuento decimal(10,2) not null, -- Descuento después de ingresar el cupón
     Monto_minimo decimal(10,2),  -- Compra mínima requerida
     Cantidad_maxima_usos int, -- Límite de uso
@@ -395,4 +395,4 @@ create table Imagenes_Devolucion (
     Devolucion_ID int not null, -- Relación tabla devoluciones
     Url varchar(200) not null, -- Evidencia visual
     foreign key (Devolucion_ID) references Devoluciones(ID_Devolucion)
-) engine=InnoDB default charset=utf8mb4;
+) engine=InnoDB default charset=utf8mb4;carrito_compras

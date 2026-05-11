@@ -62,3 +62,6 @@ show index from Carrito_Compras;
 show columns from Carrito_Compras;
 drop index Usuario_ID_2 on Carrito_Compras;
 drop index Sesion_ID_2 on Carrito_Compras;
+
+alter table cupones 
+modify column Tipo_Descuento enum("Porcentaje", "Monto Fijo");
