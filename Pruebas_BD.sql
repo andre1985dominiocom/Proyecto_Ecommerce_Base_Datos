@@ -48,3 +48,5 @@ values ("Servientrega", "SEV012", "En Preparación", "Pedido en proceso de despa
 select * from cupones;
 
 describe promociones;
+
+select * from productos;
